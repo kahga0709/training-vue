@@ -1,30 +1,50 @@
 <script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
+import { ref } from 'vue'
+import Main from './view/Main.vue';
+import Interact from './view/Interact.vue';
+import Result from './view/Result.vue';
+
+enum Page {
+  Main,
+  Interact,
+  Result,
+}
+
+const statusMatch = ref<Page>(Page.Main);
+
+const total = ref<number>(0);
+
+const initGame = (totalCard: number) => {
+  total.value = totalCard;
+  navigateTo(Page.Interact);
+}
+
+const navigateTo = (page: Page) => {
+  statusMatch.value = page;
+}
 </script>
 
 <template>
-  <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
+  <div class="screen">
+    <Main v-if="statusMatch === Page.Main" @click="initGame($event)" />
+    <Interact v-else-if="statusMatch === Page.Interact" :totalCard="total" @goResult="navigateTo(Page.Result)" />
+    <Result v-else-if="statusMatch === Page.Result" />
   </div>
-  <HelloWorld msg="Vite + Vue" />
 </template>
 
 <style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+.screen {
+  width: 100%;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background-color: var(--dark);
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
-}
-</style>
+</style> 
+
