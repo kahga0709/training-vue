@@ -8,18 +8,25 @@ interface CardModel {
     isActive: boolean,
 }
 
-const emit = defineEmits(['goResult'])
+const emit = defineEmits(['goResult', 'getTime'])
 
 const props = defineProps<{
-    totalCard: number
+    totalCard: number,
+    level: number,
 }>()
 const cards = ref<CardModel[]>([]);
 
 let point: number = 0;
 let selectedList: { value: number, index: number }[] = []
+let time = 0;
 
 onMounted(() => {
     generateCard(props.totalCard);
+
+    // start time
+    setInterval(() => {
+        time++
+    }, 1000);
 })
 
 const generateCard = (totalCard: number) => {
@@ -86,8 +93,9 @@ const onSelectCard = (index: number) => {
             cards.value[item2.index].isActive = false;
             // Check win
             point++
-            if (point === props.totalCard / 2) {
+            if (point === 1) {
                 emit('goResult')
+                emit('getTime', time)
             }
         } else {
             setTimeout(() => {
@@ -102,11 +110,18 @@ const onSelectCard = (index: number) => {
 </script> 
 
 <template>
-    <div class="grid-container">
+    <div class="grid-container" :style="{ gridTemplateColumns: `repeat(${level}, 1fr)` }">
         <NewCard v-for="(card, index) in cards " :key="index" :imageUrl="`/src/assets/images/${card.value}.png`"
             :isFlipped="card.isFlipped" @click="onSelectCard(index)" />
     </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.grid-container {
+    display: grid;
+    grid-gap: 5px;
+    align-items: center;
+    justify-content: center;
+}
+</style>
 

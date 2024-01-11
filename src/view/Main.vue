@@ -6,27 +6,31 @@ const modes = [
         title: '4X4',
         mode: 'Easy',
         totalCard: 16,
+        level: 4,
     },
     {
         title: '6X6',
         mode: 'Normal',
         totalCard: 36,
+        level: 6,
     },
     {
         title: '8X8',
         mode: 'Hard',
         totalCard: 54,
+        level: 8,
     },
     {
         title: '10X10',
         mode: 'Super Hard',
         totalCard: 100,
+        level: 10,
     },
 ]
 const emit = defineEmits(['click']);
 
-const onSelectedMode = (totalCard: number) => {
-    emit('click', totalCard);
+const onSelectedMode = (mode: any) => {
+    emit('click', mode);
 }
 
 </script>
@@ -36,8 +40,7 @@ const onSelectedMode = (totalCard: number) => {
     <p>Select mode to start game</p>
 
     <div class="modes">
-        <ModeButton v-for="(m, index) in modes" :title="m.title" :mode="m.mode" :key="index"
-            @click="onSelectedMode(m.totalCard)" />
+        <ModeButton v-for="(m, index) in modes" :title="m.title" :mode="m.mode" :key="index" @click="onSelectedMode(m)" />
     </div>
 </template>
 
