@@ -49,4 +49,15 @@ const onSelectedMode = (mode: any) => {
     display: flex;
     margin-top: 2rem;
 }
+
+h1 {
+    color: var(--light);
+    font-size: 4.5rem;
+    text-transform: uppercase;
+}
+
+p {
+    color: var(--light);
+    font-size: 2rem;
+}
 </style> 

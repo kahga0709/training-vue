@@ -9,8 +9,8 @@ const emit = defineEmits(['click'])
 
 <template>
     <button class="mode-button" @click="emit('click')">
-        <span class="span-title">{{ title }}</span>
-        <span class="span-rank"> {{ mode }}</span>
+        <span class="title">{{ title }}</span>
+        <span class="mode"> {{ mode }}</span>
     </button>
 </template>
 
@@ -37,11 +37,11 @@ const emit = defineEmits(['click'])
     color: var(--dark)
 }
 
-.span-title {
+.title {
     font-size: 2rem
 }
 
-.pan-rank {
+.mode {
     display: block;
     font-size: 1.25rem;
     margin-top: .5rem

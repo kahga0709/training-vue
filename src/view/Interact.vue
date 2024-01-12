@@ -1,5 +1,5 @@
 <script setup lang="ts" >
-import { onMounted, ref } from 'vue'
+import { onBeforeMount, onMounted, ref } from 'vue'
 import NewCard from '../components/NewCard.vue';
 
 interface CardModel {
@@ -18,14 +18,15 @@ const cards = ref<CardModel[]>([]);
 
 let point: number = 0;
 let selectedList: { value: number, index: number }[] = []
-let time = 0;
+let second = 0;
+
+onBeforeMount(() => {
+    generateCard(props.totalCard);
+})
 
 onMounted(() => {
-    generateCard(props.totalCard);
-
-    // start time
     setInterval(() => {
-        time++
+        second++
     }, 1000);
 })
 
@@ -83,7 +84,6 @@ const onSelectCard = (index: number) => {
         cards.value[index].isFlipped = true;
     }
 
-
     if (selectedList.length === 2) {
         const item1 = selectedList[0]
         const item2 = selectedList[1]
@@ -93,9 +93,9 @@ const onSelectCard = (index: number) => {
             cards.value[item2.index].isActive = false;
             // Check win
             point++
-            if (point === 1) {
+            if (point === props.totalCard / 2) {
                 emit('goResult')
-                emit('getTime', time)
+                emit('getTime', second)
             }
         } else {
             setTimeout(() => {
@@ -110,18 +110,34 @@ const onSelectCard = (index: number) => {
 </script> 
 
 <template>
-    <div class="grid-container" :style="{ gridTemplateColumns: `repeat(${level}, 1fr)` }">
-        <NewCard v-for="(card, index) in cards " :key="index" :imageUrl="`/src/assets/images/${card.value}.png`"
-            :isFlipped="card.isFlipped" @click="onSelectCard(index)" />
+    <div class="interact">
+        <div class="interact__inner" :style="{
+            width: `${((((920 - 16 * 4) / Math.sqrt(totalCard) - 16) * 3) / 4 +
+                16) *
+                Math.sqrt(totalCard)
+                }px`,
+        }">
+            <NewCard v-for="(card, index) in cards " :key="index" :imageUrl="`/src/assets/images/${card.value}.png`"
+                :isFlipped="card.isFlipped" :totalCard="totalCard" @click="onSelectCard(index)" />
+        </div>
     </div>
 </template>
 
 <style scoped>
-.grid-container {
-    display: grid;
-    grid-gap: 5px;
-    align-items: center;
-    justify-content: center;
+.interact {
+    width: 100%;
+    height: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: var(--dark);
+}
+
+.interact__inner {
+    width: calc(424px);
+    display: flex;
+    flex-wrap: wrap;
+    margin: 2rem auto;
 }
 </style>
 

@@ -2,22 +2,37 @@
 
 const emit = defineEmits(['click']);
 
-defineProps({
-    imageUrl: String,
-    isFlipped: Boolean,
-    isActive: Boolean,
-});
+const props = defineProps<{
+    imageUrl: string
+    isFlipped: boolean,
+    totalCard: number,
+}>()
+
 </script>
 
 <template>
-    <div class="card" @click="emit('click')">
+    <div class="card" @click="emit('click')" :style="{
+        height: `${(920 - 16 * 4) / Math.sqrt(props.totalCard) - 16}px`,
+        width: `${(((920 - 16 * 4) / Math.sqrt(props.totalCard) - 16) * 3) / 4
+            }px`,
+        perspective: `${((((920 - 16 * 4) / Math.sqrt(props.totalCard) - 16) * 3) / 4) * 2
+            }px`,
+    }">
         <div class="card__inner" :class="{ 'is-flipped': isFlipped }">
             <div class="card__face card__face--front">
-                <div class="card__content"></div>
+                <div class="card__content" :style="{
+                    'background-size': `${(((920 - 16 * 4) / Math.sqrt(props.totalCard) - 16) * 3) /
+                        4 /
+                        3
+                        }px ${(((920 - 16 * 4) / Math.sqrt(props.totalCard) - 16) * 3) /
+                        4 /
+                        3
+                        }px`,
+                }"></div>
             </div>
             <div class="card__face card__face--back">
                 <div class="card__content">
-                    <img :src="imageUrl">
+                    <img :src="imageUrl" height="90%" width="90%">
                 </div>
             </div>
         </div>
@@ -29,9 +44,6 @@ defineProps({
     display: inline-block;
     margin-right: 1rem;
     margin-bottom: 1rem;
-    height: 198px;
-    width: 148.5px;
-    perspective: 297px;
 }
 
 .card__inner {
@@ -43,9 +55,6 @@ defineProps({
     position: relative
 }
 
-.card.disabled .card__inner {
-    cursor: default
-}
 
 .card__inner.is-flipped {
     transform: rotateY(-180deg)
@@ -67,7 +76,6 @@ defineProps({
     background: url("../assets/images/icon_back.png") no-repeat center center;
     height: 100%;
     width: 100%;
-    background-size: 49.5px 49.5px;
 }
 
 .card__face--back {
